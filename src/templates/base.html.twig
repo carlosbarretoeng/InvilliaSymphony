@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Invillia - PHP CHALLENGE</title>
+
+    <link rel="stylesheet" href="/css/semantic.min.css"/>
+
+    <link rel="stylesheet" href="/css/index.css"/>
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+</head>
+<body>
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <img src="/imgs/invillia.png" class="image">
+        <form id="form" class="ui large form" method="post" action="{{ path('upload') }}" enctype="multipart/form-data">
+            <input type="hidden" name="limit_file_size" value="{{ max_file_size }}" />
+            <input type="file" name="files[]" id="file" accept="text/xml" multiple/>
+            <label for="file">
+                <div><strong>Choose a file</strong><span class="dragAndDrop">&nbsp;or drag it here</span>.</div>
+            </label>
+            <br/>
+            <button type="submit" class="ui fluid large orange disabled button">Process</button>
+            <br/>
+            <a href="{{ path('upload') }}" class="ui fluid large basic orange button">API Documentation</a>
+            <br/>
+            <div class="messageDiv">
+                <div class="ui one column stackable padded middle aligned centered color grid">
+                    <div class="">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/js/semantic.min.js"></script>
+<script src="/js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+body {
+    background-color: #DADADA;
+}
+
+body > .grid {
+    height: 100vh;
+}
+
+.image {
+    margin-top: -100px;
+    margin-bottom: 20px;
+    width: 300px;
+}
+
+.column {
+    max-width: 450px;
+}
+
+.form {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form label {
+    height: 200px;
+    flex-direction: column;
+    background-color: #e1e1e8;
+    border: 2px solid lightgrey;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type=file],
+.dragAndDrop {
+    display: none;
+}
+
+.hasNecessaryFeatures .dragAndDrop {
+    display: inline;
+}
+
+.form > label:hover,
+.form.isDragover > label {
+    background-color: #EDEBEA;
+}
+
+.form.isUploading .uploadingMessage,
+.form.isSuccess .successMessage,
+.form.isError .errorMessage{
+    display: flex;
+}
+
+.form.isUploading button {
+    cursor: default;
+    opacity: .45 !important;
+    background-image: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
+}

@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 ADD .docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
@@ -30,5 +30,5 @@ RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 RUN docker-php-ext-install pdo pdo_mysql
 
 RUN apk add --no-cache $PHPIZE_DEPS \
-	&& pecl install xdebug-2.9.7 \
+	&& pecl install xdebug \
 	&& docker-php-ext-enable xdebug
