@@ -1,0 +1,219 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Invillia - PHP Challenge - API Documentation",
+    "description": "This is a API documentation to Invillia PHP Challenge.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "//localhost:8080/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "People",
+      "description": "Everything about each person"
+    },
+    {
+      "name": "Ship Order",
+      "description": "Access to ship orders"
+    }
+  ],
+  "paths": {
+    "/person": {
+      "get": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Finds All People",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Person"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/person/{personId}": {
+      "get": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Finds a specific person by personId",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "Numeric ID of the user to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shiporder": {
+      "get": {
+        "tags": [
+          "Ship Order"
+        ],
+        "summary": "Finds All Ship Orders",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShipOrder"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shiporder/{personId}": {
+      "get": {
+        "tags": [
+          "Ship Order"
+        ],
+        "summary": "Finds a specific person by personId",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "Numeric ID of the user to get",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Person": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ShipOrder": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "orderPerson": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "name": {
+                "type": "string"
+              },
+              "phones": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "price": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "shipto": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
