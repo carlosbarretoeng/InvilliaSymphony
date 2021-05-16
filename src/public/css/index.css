@@ -7,9 +7,8 @@ body > .grid {
 }
 
 .image {
-    margin-top: -100px;
-    margin-bottom: 20px;
-    width: 300px;
+    margin-bottom: 8px;
+    width: 200px;
 }
 
 .column {

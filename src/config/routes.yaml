@@ -1,7 +1,27 @@
-index:
+home:
     path: /
     controller: App\Controller\IndexController::index
 
-upload:
-    path: /upload
-    controller: App\Controller\IndexController::upload
+do-upload:
+    path: /doUpload
+    controller: App\Controller\UploadController::upload
+
+api-documentation:
+    path: /api/documentation
+    controller: App\Controller\IndexController::index
+
+api-person-getAll:
+    path: /api/person
+    controller: App\Controller\PersonController::getAll
+
+api-person-getOne:
+    path: /api/person/{id}
+    controller: App\Controller\PersonController::getOne
+
+api-shiporder-getAll:
+    path: /api/shiporder
+    controller: App\Controller\ShipOrderController::getAll
+
+api-shiporder-getOne:
+    path: /api/shiporder/{id}
+    controller: App\Controller\ShipOrderController::getOne

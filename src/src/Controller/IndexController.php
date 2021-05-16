@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
@@ -19,24 +20,14 @@ class IndexController extends AbstractController
         return $number * pow(1024, $multiply);
     }
 
+    /**
+     * @Route("/", name="home")
+     * @return Response
+     */
     public function index(): Response
     {
         return $this->render('base.html.twig', [
             "max_file_size" => $this->humanReadableToBytes(/*ini_get('post_max_size')*/ "8M")
         ]);
-    }
-
-    public function upload(): Response
-    {
-        sleep(3);
-
-        $response = new Response();
-        $response->setContent(json_encode([
-            //'success' => false,
-            //'error' => 'Something wrong it\'s realy not right'
-        ]));
-        $response->headers->set('Content-Type', 'application/json');
-        //$response->setStatusCode(500);
-        return $response;
     }
 }

@@ -18,7 +18,9 @@
 <div class="ui middle aligned center aligned grid">
     <div class="column">
         <img src="/imgs/invillia.png" class="image">
-        <form id="form" class="ui large form" method="post" action="{{ path('upload') }}" enctype="multipart/form-data">
+        <h3>PHP Challenge</h3>
+        <form id="form" class="ui large form" method="post" action="{{ path('do-upload') }}" enctype="multipart/form-data">
+            <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />
             <input type="hidden" name="limit_file_size" value="{{ max_file_size }}" />
             <input type="file" name="files[]" id="file" accept="text/xml" multiple/>
             <label for="file">
@@ -27,7 +29,7 @@
             <br/>
             <button type="submit" class="ui fluid large orange disabled button">Process</button>
             <br/>
-            <a href="{{ path('upload') }}" class="ui fluid large basic orange button">API Documentation</a>
+            <a href="{{ path('api-documentation') }}" class="ui fluid large basic orange button">API Documentation</a>
             <br/>
             <div class="messageDiv">
                 <div class="ui one column stackable padded middle aligned centered color grid">

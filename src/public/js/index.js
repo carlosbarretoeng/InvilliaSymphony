@@ -29,16 +29,22 @@ let showMessage = (type, message = '') => {
         case "success":
             $messageDiv.find('div > div').attr('class', 'green column')
             $messageDiv.find('span').text(message)
+            clearInput()
             break;
         default:
             $messageDiv.find('div > div').attr('class', 'violet column')
             $messageDiv.find('span').text(message)
+            clearInput()
     }
 }
 
 let processFiles = (files) => {
     clearMessage()
     if (!validateFiles(files)) {
+        setTimeout(() => {
+            clearInput()
+            clearMessage()
+        }, 5000)
         return
     }
     showFileNamesInLabel(files)
@@ -70,7 +76,7 @@ let showFileNamesInLabel = (files) => {
     if (text.length !== 0) $('form').find('label').text(text.join(", "));
 }
 
-let $maxFileSize = $('input[type="hidden"]').val()
+let $maxFileSize = $('input[name="limit_file_size"]').val()
 
 let $form = $('form')
 let $input = $('input[type="file"]')
@@ -103,16 +109,10 @@ $form.on('submit', (evt) => {
     if (browserHasNecessaryFeatures) {
         evt.preventDefault()
         let ajaxData = new FormData($form.get(0))
-        if (droppedFiles !== null) {
-            $.each(droppedFiles, function (idx, file) {
-                ajaxData.append($input.attr('name'), file)
-            })
-        }
         $.ajax({
             url: $form.attr('action'),
             type: $form.attr('method'),
             data: ajaxData,
-            dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,
@@ -123,15 +123,10 @@ $form.on('submit', (evt) => {
                 }, 5000)
             },
             success: (data) => {
-                console.log(data)
-                if (!!!data.success) {
-                    showMessage('error', data.error || 'Unknown error')
-                    return
-                }
                 showMessage('success', 'File Uploaded and Processed')
             },
             error: (err) => {
-                showMessage('error', err.statusText)
+                showMessage('error', err.responseText || 'Unknown error')
             }
         })
     } else {

@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:80"
     expose:
-      - 9090
+      - 9003
     volumes:
       -  ./src:/var/www/html:delegated
     depends_on:
