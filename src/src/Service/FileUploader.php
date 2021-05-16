@@ -17,7 +17,6 @@ class FileUploader
     public function upload($uploadDirectory, $file, $filename)
     {
         try{
-            sleep(10);
             $file->move($uploadDirectory, $filename);
         } catch (FileException $exception) {
             $this->logger->error('failed to upload file: ' . $exception->getMessage());

@@ -39,4 +39,20 @@ the screen.
 
 ![img2.png](https://raw.githubusercontent.com/carlosbarretoeng/InvilliaSymphony/master/img2.png)
 
-.
+If something wrong occurs, a red label as follows will be shown. The text
+on the label will explain the error.
+
+![img3.png](https://raw.githubusercontent.com/carlosbarretoeng/InvilliaSymphony/master/img3.png)
+
+When all files and elements are processed, a green label message will be 
+on the screen. So now, the API can bring back this new data.
+
+![img4.png](https://raw.githubusercontent.com/carlosbarretoeng/InvilliaSymphony/master/img4.png)
+
+The button "API Documentation" will send you to a page with API specs.
+
+I hope that this app can show you a few of my tech skills. I know that I 
+have so much to improve, but every day I still studying. Thanks a lot 
+for this opportunity!
+
+### Have an incredible day and keep safe!
