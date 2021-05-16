@@ -27,4 +27,16 @@ with the following commands:
 Done! Now you can access in your browser the URL [http://localhost:8080/](http://localhost:8080/)
 and you can see this screen:
 
-![img1.png](img.png)
+![img1.png](https://raw.githubusercontent.com/carlosbarretoeng/InvilliaSymphony/master/img1.png)
+
+You can click on "Choose a file ..." to select one or **multiple** files. 
+The app will validate the files over mime type and size, based on the php.
+ini post_max_upload property. You can drag and drop files over there too. 
+
+After that, you will click on the "Process" button to upload and processing 
+the files. While the files are uploading, a blue label as follows still on 
+the screen.
+
+![img2.png](https://raw.githubusercontent.com/carlosbarretoeng/InvilliaSymphony/master/img2.png)
+
+.
