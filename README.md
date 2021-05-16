@@ -14,6 +14,17 @@ First, your need to clone the repository and build up the docker  containers
 
 > $ docker-compose up --build
 
-After this, We need to install all vendor's libraries. To do that, inside 
-your cloned folder, run:
-> $ docker-compose
+After this, we need to install all vendor's libraries. To do that, in another 
+terminal, inside your cloned folder, run:
+> $ docker-compose run --rm composer install
+
+Now, we need to bring the database alive. We will create and populate than 
+with the following commands:
+> $ docker-compose run --rm php bin/console doctrine:database:create
+
+> $ docker-compose run --rm php bin/console doctrine:migrations:migrate --no-interaction
+
+Done! Now you can access in your browser the URL [http://localhost:8080/](http://localhost:8080/)
+and you can see this screen:
+
+![img1.png](img.png)
