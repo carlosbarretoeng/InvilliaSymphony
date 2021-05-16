@@ -28,7 +28,3 @@ RUN NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
 RUN apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 
 RUN docker-php-ext-install pdo pdo_mysql
-
-RUN apk add --no-cache $PHPIZE_DEPS \
-	&& pecl install xdebug \
-	&& docker-php-ext-enable xdebug
