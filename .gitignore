@@ -1,4 +1,4 @@
-.idea/
+.idea
 
-src/vendor/
-src/var/
+src/vendor
+src/var

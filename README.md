@@ -6,7 +6,7 @@ This challenge is to create an application that can upload XML files and expose
 his data over an API for other apps. To make this, I must have implemented the 
 software using the Symfony PHP framework.
 
-
+-----
 ## How to run
 
 First, your need to clone the repository and build up the docker  containers
@@ -16,7 +16,7 @@ First, your need to clone the repository and build up the docker  containers
 
 After this, we need to install all vendor's libraries. To do that, in another 
 terminal, inside your cloned folder, run:
-> $ docker-compose run --rm composer install
+> $ docker-compose run --rm php composer install --ignore-platform-reqs
 
 Now, we need to bring the database alive. We will create and populate than 
 with the following commands:
@@ -50,6 +50,16 @@ on the screen. So now, the API can bring back this new data.
 ![img4.png](https://raw.githubusercontent.com/carlosbarretoeng/InvilliaSymphony/master/img4.png)
 
 The button "API Documentation" will send you to a page with API specs.
+
+-----
+## How to test
+
+I used the PHPUnit bundle powered by Symfony to construct my unit tests. 
+To execute all it is only necessary to run:
+
+> $ docker-compose run --rm php bin/phpunit
+
+-----
 
 I hope that this app can show you a few of my tech skills. I know that I 
 have so much to improve, but every day I still studying. Thanks a lot 

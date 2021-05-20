@@ -1,155 +1,219 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Person;
 use App\Entity\ShipOrder;
-use DOMNode;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\FileUploader;
-use Psr\Log\LoggerInterface;
 
-class UploadController extends AbstractController
+final class UploadController extends AbstractController
 {
-
-    public function upload(Request $request, string $uploadDirectory, FileUploader $fileUploader, LoggerInterface $logger): Response
-    {
+    public function upload(
+        Request $request,
+        string $uploadDirectory
+    ): Response {
         try {
-            $token = $request->get("token");
+            $token = $request->get('token');
 
-            if (!$this->isCsrfTokenValid('upload', $token)) {
-                $logger->info('CSRF failure');
-                return new Response("Operation not allowed", Response::HTTP_BAD_REQUEST, ['content-type' => 'text/plain']);
-            }
+            $this->validateCsrfToken($token);
+            $this->validateFiles($request->files->get('files'));
 
             $files = $request->files->get('files');
-            if (empty($files)) {
-                return new Response("No file specified", Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
-            }
 
-            foreach ($files as $file) {
-                $filename = date("c") . "-" . $file->getClientOriginalName();
-                $fileUploader->upload($uploadDirectory, $file, $filename);
-                $process = $this->processXmlFile($uploadDirectory . "/" . $filename);
-                if ($process !== true) {
-                    throw new Exception($file->getClientOriginalName() . " ~> " . $process);
-                }
-            }
-
-            return new Response("File(s) Uploaded", Response::HTTP_OK, ['content-type' => 'text/plain']);
+            $this->uploadFile($files, $uploadDirectory);
+            return $this->makeResponse(Response::HTTP_OK, 'File(s) Uploaded');
         } catch (Exception $exception) {
-            return new Response($exception->getMessage(), Response::HTTP_BAD_REQUEST, ['content-type' => 'text/plain']);
+            return $this->makeResponse(
+                Response::HTTP_BAD_REQUEST,
+                $exception->getMessage()
+            );
         }
     }
 
-    private function processXmlFile(string $filePath): bool|string
+    private function uploadFile(
+        mixed $files,
+        string $uploadDirectory
+    ): void {
+        foreach ($files as $file) {
+            $filename = date('c') . '-' . $file->getClientOriginalName();
+            $file->move($uploadDirectory, $filename);
+            $process = $this->processXmlFile(
+                $uploadDirectory . '/' . $filename
+            );
+            if ($process !== true) {
+                throw new Exception(
+                    $file->getClientOriginalName() . ' ~> ' . $process
+                );
+            }
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function validateCsrfToken(mixed $token): void
+    {
+        if (! $this->isCsrfTokenValid('upload', $token)) {
+            throw new Exception('Operation not allowed');
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function validateFiles(mixed $files): void
+    {
+        if (count($files) === 0) {
+            throw new Exception('No file specified');
+        }
+    }
+
+    private function makeResponse(int $status, string $message): Response
+    {
+        return new Response(
+            $message,
+            $status,
+            ['content-type' => 'text/plain']
+        );
+    }
+
+    public function processXmlFile(string $filePath): bool | string
     {
         $domCrawler = new Crawler();
         $domCrawler->addXmlContent(file_get_contents($filePath));
 
         $xmlRootNodeName = $this->getRootNodeName($domCrawler);
 
-        if (is_null($xmlRootNodeName)) return "Invalid XML format.";
+        if (is_null($xmlRootNodeName)) {
+            return 'Invalid XML format.';
+        }
 
         switch ($xmlRootNodeName) {
-            case "people":
+            case 'people':
                 $this->processXmlProfilePeople($domCrawler);
                 return true;
-            case "shiporders":
+            case 'shiporders':
                 $this->processXmlProfileShipOrders($domCrawler);
                 return true;
             default:
-                return "XML Profile not found";
+                return 'XML Profile not found';
         }
     }
 
     private function getRootNodeName(Crawler $domCrawler): mixed
     {
-        return empty($domCrawler->extract(['_name'])) ? null : $domCrawler->extract(['_name'])[0];
+        if (count($domCrawler->extract(['_name'])) === 0) {
+            return null;
+        }
+        return $domCrawler->extract(['_name'])[0];
     }
 
-    private function processXmlProfilePeople(Crawler $domCrawler)
+    private function processXmlProfilePeople(Crawler $domCrawler): void
     {
-        $domCrawler->filter('people person')->each(function (Crawler $node) {
-            $personId = $node->filter('personid')->getNode(0)->nodeValue;
-            $personName = $node->filter('personname')->getNode(0)->nodeValue;
-            $phones = $node->filter('phones phone')->each(function (Crawler $phone) {
-                return $phone->text();
-            });
+        $domCrawler->filter('people person')
+            ->each(function (Crawler $node): void {
+                $personId = $node->filter('personid')->getNode(0)->nodeValue;
+                $personName = $node->filter('personname')
+                    ->getNode(0)->nodeValue;
+                $phones = $node->filter('phones phone')
+                    ->each(function (Crawler $phone) {
+                        return $phone->text();
+                    });
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $hasPerson = $entityManager->getRepository(Person::class)->find($personId);
+                $entityManager = $this->getDoctrine()->getManager();
+                $hasPerson = $entityManager->getRepository(Person::class)
+                    ->find($personId);
 
-            if (!$hasPerson) {
+                if ($hasPerson) {
+                    $hasPerson->populate(
+                        $hasPerson->getId(),
+                        $personName,
+                        $phones
+                    );
+                    $entityManager->flush();
+                    return;
+                }
                 $person = new Person();
-                $person->setId($personId);
-                $person->setName($personName);
-                $person->setPhones($phones);
-
+                $person->populate(
+                    (int) $personId,
+                    $personName,
+                    $phones
+                );
                 $entityManager->persist($person);
-            } else {
-                $hasPerson->setName($personName);
-                $hasPerson->setPhones($phones);
-            }
-
-            $entityManager->flush();
-        });
+                $entityManager->flush();
+            });
     }
 
-    private function processXmlProfileShipOrders(Crawler $domCrawler)
+    private function processXmlProfileShipOrders(Crawler $domCrawler): void
     {
-        $domCrawler->filter('shiporders shiporder')->each(function (Crawler $node) {
-            $orderId = $node->filter('orderid')->getNode(0)->nodeValue;
-            $orderPersonId = $node->filter('orderperson')->getNode(0)->nodeValue;
-            $shipTo = $this->processXmlProfileShipOrdersShipTo($node->filter('shipto'));
-            $items = $this->processXmlProfileShipOrdersItems($node->filter('items'));
+        $domCrawler->filter('shiporders shiporder')
+            ->each(function (Crawler $node): void {
+                $orderId = $node->filter('orderid')
+                    ->getNode(0)->nodeValue;
+                $orderPersonId = $node->filter('orderperson')
+                    ->getNode(0)->nodeValue;
+                $shipTo = $this->processXmlProfileShipOrdersShipTo(
+                    $node->filter('shipto')
+                );
+                $items = $this->processXmlProfileShipOrdersItems(
+                    $node->filter('items')
+                );
 
-            $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->getDoctrine()->getManager();
 
-            $hasShipOrder = $entityManager->getRepository(ShipOrder::class)->find($orderId);
+                $hasShipOrder = $entityManager->getRepository(ShipOrder::class)
+                    ->find($orderId);
 
-            $orderPerson = $entityManager->getRepository(Person::class)->find($orderPersonId);
+                $orderPerson = $entityManager->getRepository(Person::class)
+                    ->find($orderPersonId);
 
-            if (!$hasShipOrder) {
+                if ($hasShipOrder) {
+                    $hasShipOrder->populateShipOrder(
+                        $orderPerson,
+                        $shipTo,
+                        $items
+                    );
+                    $entityManager->flush();
+                    return;
+                }
+
                 $shipOrder = new ShipOrder();
-
-                $shipOrder->setOrderperson($orderPerson);
-                $shipOrder->setShipto($shipTo);
-                $shipOrder->setItems($items);
-
+                $shipOrder->populateShipOrder($orderPerson, $shipTo, $items);
                 $entityManager->persist($shipOrder);
-            } else {
-                $hasShipOrder->setOrderperson($orderPerson);
-                $hasShipOrder->setShipto($shipTo);
-                $hasShipOrder->setItems($items);
-            }
-
-            $entityManager->flush();
-        });
+                $entityManager->flush();
+            });
     }
 
-    private function processXmlProfileShipOrdersShipTo(Crawler $shipTo)
+    /**
+     * @return array<string> array
+     */
+    private function processXmlProfileShipOrdersShipTo(Crawler $shipTo): array
     {
         return [
-            "name" => $shipTo->filter('shipto name')->text(),
-            "address" => $shipTo->filter('shipto address')->text(),
-            "city" => $shipTo->filter('shipto city')->text(),
-            "country" => $shipTo->filter('shipto country')->text()
+            'name' => $shipTo->filter('shipto name')->text(),
+            'address' => $shipTo->filter('shipto address')->text(),
+            'city' => $shipTo->filter('shipto city')->text(),
+            'country' => $shipTo->filter('shipto country')->text(),
         ];
     }
 
-    private function processXmlProfileShipOrdersItems(Crawler $items)
+    /**
+     * @return array<string,string> array
+     */
+    private function processXmlProfileShipOrdersItems(Crawler $items): array
     {
-        return $items->filter('item')->each(function (Crawler $node) {
+        return $items->filter('item')->each(function (Crawler $node): array {
             return [
-                "title" => $node->filter('title')->text(),
-                "note" => $node->filter('note')->text(),
-                "quantity" => $node->filter('quantity')->text(),
-                "price" => $node->filter('price')->text()
+                'title' => $node->filter('title')->text(),
+                'note' => $node->filter('note')->text(),
+                'quantity' => (int) $node->filter('quantity')->text(),
+                'price' => (float) $node->filter('price')->text(),
             ];
         });
     }

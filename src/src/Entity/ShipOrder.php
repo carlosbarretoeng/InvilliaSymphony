@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ShipOrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,26 +15,38 @@ class ShipOrder
 {
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
-    private $orderid;
+    private int $orderid;
 
     /**
      * @ORM\ManyToOne(targetEntity=Person::class, inversedBy="shipOrders")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
-    private $orderperson;
+    private Person $orderperson;
 
     /**
      * @ORM\Column(type="array")
+     *
+     * @var array<string>
      */
-    private $items = [];
+    private array $items = [];
 
     /**
      * @ORM\Column(type="json")
+     *
+     * @var array<string>
      */
-    private $shipto = [];
+    private array $shipto = [];
+
+    public function __construct()
+    {
+        $this->items_ = new ArrayCollection();
+    }
 
     public function getOrderId(): ?int
     {
@@ -45,34 +58,33 @@ class ShipOrder
         return $this->orderperson;
     }
 
-    public function setOrderPerson(?Person $orderperson): self
-    {
-        $this->orderperson = $orderperson;
-
-        return $this;
-    }
-
-    public function getItems(): ?array
+    /**
+     * @return array<string>
+     */
+    public function getItems(): array
     {
         return $this->items;
     }
 
-    public function setItems(array $items): self
-    {
-        $this->items = $items;
-
-        return $this;
-    }
-
-    public function getShipto(): ?array
+    /**
+     * @return array<string>
+     */
+    public function getShipto(): array
     {
         return $this->shipto;
     }
 
-    public function setShipto(array $shipto): self
-    {
-        $this->shipto = $shipto;
-
-        return $this;
+    /**
+     * @param array<string> $shipTo
+     * @param array<string> $items
+     */
+    public function populateShipOrder(
+        Person $orderPerson,
+        array $shipTo,
+        array $items
+    ): void {
+        $this->orderperson = $orderPerson;
+        $this->shipto = $shipTo;
+        $this->items = $items;
     }
 }

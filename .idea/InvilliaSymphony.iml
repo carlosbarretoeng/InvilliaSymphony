@@ -106,6 +106,27 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/link" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/squizlabs/php_codesniffer" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/phploc/phploc" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/php-cs-fixer/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/seld/jsonlint" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/seld/phar-utils" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/nette/utils" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/theseer/fdomdocument" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/sebastian/finder-facade" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/sebastian/version" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/nunomaduro/phpinsights" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/slevomat/coding-standard" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/object-calisthenics/phpcs-calisthenics-rules" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/friendsofphp/php-cs-fixer" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpstan/phpdoc-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/dealerdirect/phpcodesniffer-composer-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/container" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/justinrainbow/json-schema" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/nelmio/cors-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/willdurand/negotiation" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/api-platform/core" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/fig/link-util" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

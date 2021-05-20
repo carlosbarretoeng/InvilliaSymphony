@@ -8,6 +8,8 @@ services:
     container_name: invillia_nginx
     ports:
       - "8080:80"
+    expose:
+      - 9003
     volumes:
       -  ./src:/var/www/html:delegated
     depends_on:

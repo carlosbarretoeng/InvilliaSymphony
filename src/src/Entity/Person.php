@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PersonRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,35 +14,28 @@ class Person
 {
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="array")
+     *
+     * @var array<string> $phones
      */
-    private $phones = [];
-
-    public function __construct()
-    {
-    }
+    private array $phones = [];
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -50,22 +43,24 @@ class Person
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPhones(): ?array
+    /**
+     * @return array<string>
+     */
+    public function getPhones(): array
     {
         return $this->phones;
     }
 
-    public function setPhones(array $phones): self
-    {
+    /**
+     * @param array<string> $phones
+     */
+    public function populate(
+        int $personId,
+        string $personName,
+        array $phones
+    ): void {
+        $this->id = $personId;
+        $this->name = $personName;
         $this->phones = $phones;
-
-        return $this;
     }
 }

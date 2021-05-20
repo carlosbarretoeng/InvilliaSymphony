@@ -41,10 +41,6 @@ let showMessage = (type, message = '') => {
 let processFiles = (files) => {
     clearMessage()
     if (!validateFiles(files)) {
-        setTimeout(() => {
-            clearInput()
-            clearMessage()
-        }, 5000)
         return
     }
     showFileNamesInLabel(files)
@@ -117,13 +113,9 @@ $form.on('submit', (evt) => {
             contentType: false,
             processData: false,
             complete: () => {
-                setTimeout(() => {
-                    clearInput()
-                    clearMessage()
-                }, 5000)
             },
             success: (data) => {
-                showMessage('success', 'File Uploaded and Processed')
+                showMessage('success', data)
             },
             error: (err) => {
                 showMessage('error', err.responseText || 'Unknown error')

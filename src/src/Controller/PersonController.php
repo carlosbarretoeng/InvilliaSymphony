@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Person;
@@ -9,7 +11,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-class PersonController extends AbstractController
+final class PersonController extends AbstractController
 {
     public function getAll(): Response
     {
@@ -27,7 +29,7 @@ class PersonController extends AbstractController
         return $response;
     }
 
-    public function getOne($id): Response
+    public function getOne(int $id): Response
     {
         $encoders = [new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];

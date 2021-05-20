@@ -6,10 +6,6 @@ do-upload:
     path: /doUpload
     controller: App\Controller\UploadController::upload
 
-api-documentation:
-    path: /api/documentation
-    controller: App\Controller\IndexController::index
-
 api-person-getAll:
     path: /api/person
     controller: App\Controller\PersonController::getAll
